@@ -4,6 +4,7 @@ from shiny.express import input, ui, render
 from shinywidgets import render_plotly
 import seaborn as sns
 import matplotlib.pyplot as plt
+from shiny import reactive
 
 # Load the Palmer Penguins dataset
 penguins = load_penguins()
