@@ -1,10 +1,13 @@
-import plotly.express as px
-from palmerpenguins import load_penguins
 from shiny.express import input, ui, render
 from shinywidgets import render_plotly
+import plotly.express as px
+from palmerpenguins import load_penguins
+from shiny import reactive
 import seaborn as sns
 import matplotlib.pyplot as plt
-from shiny import reactive
+import base64
+from io import BytesIO
+
 
 # Load the Palmer Penguins dataset
 penguins = load_penguins()
@@ -123,3 +126,23 @@ with ui.layout_columns():
         def summary_table():
             summary = penguins.describe()
             return summary.reset_index()  # Reset index for display
+
+# Density plot
+with ui.card():
+    ui.card_header("Seaborn Density Plot: Body Mass by Species")
+
+    @render.plot
+    def seaborn_density_plot():
+        fig, ax = plt.subplots()
+        sns.kdeplot(
+            data=penguins,
+            x="body_mass_g",
+            hue="species",
+            ax=ax,
+            fill=True,
+            palette=["red", "black", "green"]
+        )
+        ax.set_xlabel("Body Mass (g)")
+        ax.set_ylabel("Density")
+        ax.set_title("Body Mass Density by Species")
+        return fig
